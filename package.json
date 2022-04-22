@@ -1,0 +1,24 @@
+{
+  "name": "ar-snippet-cli",
+  "version": "1.0.0",
+  "description": "Exlusive for ArvanCloud projects",
+  "main": "./bin/index.js",
+  "scripts": {
+    "serve": "node ./bin/index.js"
+  },
+  "author": "Mahdi Hasani",
+  "license": "ISC",
+  "bin": {
+    "ar-snippet": "./bin/index.js"
+  },
+  "dependencies": {
+    "ajv": "^8.11.0",
+    "ansi-colors": "^4.1.1",
+    "auto-bind": "^4.0.0",
+    "boxen": "^5.1.2",
+    "chalk": "^4.1.2",
+    "cli-progress": "^3.10.0",
+    "commander": "^9.1.0",
+    "fs-extra": "^10.1.0"
+  }
+}
