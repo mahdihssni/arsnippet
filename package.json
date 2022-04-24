@@ -1,6 +1,6 @@
 {
-  "name": "ar-snippet-cli",
-  "version": "1.0.0",
+  "name": "ars",
+  "version": "1.1.0",
   "description": "Exlusive for ArvanCloud projects",
   "main": "./bin/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Mahdi Hasani",
   "license": "ISC",
   "bin": {
-    "ar-snippet": "./bin/index.js"
+    "ars": "./bin/index.js"
   },
   "dependencies": {
     "ajv": "^8.11.0",

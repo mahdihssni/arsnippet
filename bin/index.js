@@ -18,7 +18,7 @@ program
 
 program
     .command('list')
-    .action(template.list);
+    .action(template.listAction);
 
 program
     .command('import')
@@ -36,7 +36,10 @@ program
 program
     .command('remove')
     .argument('<string>', 'template name or id')
-    .option('-i, --remove-by-id', 'remove template by id')
     .action(template.remove);
+
+program
+    .command('removeall')
+    .action(template.removeAll);
 
 program.parse(process.argv);

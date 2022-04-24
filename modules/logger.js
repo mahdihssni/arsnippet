@@ -5,7 +5,7 @@ const configure = require('./configure');
 class Logger {
     error(exception) {
         if (typeof exception === 'string') {
-            return console.log(chalk.redBright('Error: '), chalk.red.bold(err));
+            return console.log(chalk.redBright('Error: '), chalk.red(exception));
         }
     
         console.log('\n');

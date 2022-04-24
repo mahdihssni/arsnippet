@@ -4,6 +4,7 @@ const fse = require('fs-extra');
 const path = require('path');
 const configFile = require('./../bin/config.json');
 const AJV = require('ajv');
+const logger = require('./logger');
 
 class Config {
     constructor() {
@@ -12,12 +13,15 @@ class Config {
 
     action(options) {
         const methods = {
-            isprod(value) {
-                configHandler((data) => {
-                    data.isDev = value;
-    
+            isprod: (value) => {
+                value = value.toLowerCase() === 'true' || parseInt(value) > 0;
+                
+                this.handler((data) => {
+                    data.isDev = value; 
                     return data;
                 })
+
+                logger.warning('isdev mode changed ' + value);
             }
         }
     

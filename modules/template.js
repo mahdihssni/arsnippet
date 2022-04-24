@@ -11,31 +11,6 @@ const Prompt = require('./prompt');
 const compiler = require("./compiler");
 const autoBind = require("auto-bind");
 
-function listOfTemplates() {
-    if (!config.templates.length) {
-        return console.log(chalk.white.bgBlue('you haven\'t any template right now'))
-    }
-
-    const data = config.templates;
-    console.log(chalk.bold.whiteBright('\n\nlist of available templates:\n'))
-    console.table(data);
-    console.log('\n\n');
-}
-
-function extractVariablesFromTemplate(templateDir) {
-    const files = fse.readdirSync(templateDir);
-    let vars = [];
-
-    for (const file of files) {
-        const filePath = path.resolve(templateDir, file);
-        // vars.push(...extractVariableNames(fse.readFileSync(filePath, 'utf-8').toString()))
-        console.log(extractVariableNames(fse.readFileSync(filePath, 'utf-8').toString()))
-    }
-
-    console.log(vars);
-    return vars;
-}
-
 class Template {
     constructor() {
         autoBind(this);
@@ -43,6 +18,17 @@ class Template {
 
     get list() {
         return config.templates;
+    }
+
+    listAction() {
+        const data = config.templates;
+        if (!data.length) {
+            return console.log(chalk.white.bgBlue('you haven\'t any template right now'))
+        }
+
+        console.log(chalk.bold.whiteBright('\n\nlist of available templates:\n'))
+        console.table(data);
+        console.log('\n\n');
     }
 
     add() {
@@ -107,10 +93,20 @@ class Template {
                 );
             })
 
-            logger.success('template successfully removed!')
+            console.log(`'${name}' successfully removed from templates.`);
         } catch (ex) {
             logger.error(ex);
         }
+    }
+
+    removeAll() {
+        if (!this.list.length) {
+            return logger.error('no template to remove.');
+        }
+
+        this.list.forEach(template => {
+            this.remove(template.name);
+        })
     }
 
     async getVariablesValueFromCli(variables) {
