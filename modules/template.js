@@ -151,7 +151,7 @@ class Template {
             }
 
             console.log('read template storage directory files')
-            const files = fse.readdirSync(configure.getTemplateFolder(tempConfigs.id)).filter(file => path.extname(file) === '.txt');
+            const files = fse.readdirSync(configure.getTemplateFolder(tempConfigs.id)).filter(file => !!path.extname(file));
             if (!files.length) {
                 throw new Error('there is no file to render in template folder.');
             }
