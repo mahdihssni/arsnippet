@@ -12,8 +12,7 @@ program
 
 program
     .command('render')
-    .argument('<string>', 'template name')
-    .requiredOption('-n, --name <string>', 'render folder name')
+    .arguments('<templateName> <folderName>')
     .action(template.render);
 
 program

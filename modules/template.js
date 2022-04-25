@@ -143,7 +143,7 @@ class Template {
         return data;
     }
 
-    async render(templateName, { name: renderFolderName }) {
+    async render(templateName, renderFolderName) {
         try {
             const tempConfigs = configure.findTemplateConfigByName(templateName);
             if (!tempConfigs) {
