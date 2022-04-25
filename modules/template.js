@@ -167,7 +167,7 @@ class Template {
                 const fileDir = configure.getTemplateFile(tempConfigs.id, file);
 
                 fse.writeFileSync(
-                    path.resolve(whereToRenderTemplate, path.basename(file, '.txt')),
+                    path.resolve(whereToRenderTemplate, path.basename(file)),
                     compiler.renderTemplateFile(fileDir, tempVariablesWithValue)
                 )
 
