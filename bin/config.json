@@ -1,4 +1,33 @@
 {
-    "templates": [],
+    "templates": [
+        {
+            "id": "1655ir",
+            "name": "vue",
+            "variables": {
+                "baseClassName": {
+                    "type": "String",
+                    "required": true
+                },
+                "componentName": {
+                    "type": "String",
+                    "required": false
+                }
+            }
+        },
+        {
+            "id": "165ne",
+            "name": "vue2",
+            "variables": {
+                "baseClassName": {
+                    "type": "String",
+                    "required": true
+                },
+                "componentName": {
+                    "type": "String",
+                    "required": false
+                }
+            }
+        }
+    ],
     "isDev": false
 }

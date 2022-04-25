@@ -10,6 +10,7 @@ const logger = require("./logger");
 const Prompt = require('./prompt');
 const compiler = require("./compiler");
 const autoBind = require("auto-bind");
+const { exec } = require("child_process");
 
 class Template {
     constructor() {
@@ -61,17 +62,24 @@ class Template {
             const id = configure.uid();
             const tempDir = configure.getTemplateFolder(id);
             fse.mkdirsSync(tempDir);
+            console.log('template storage directory created.')
+
             fse.copySync(_path, tempDir);
+            console.log('template files were saved.')
+
+            const variables = compiler.getTemplateVariables(id);
+            console.log(`${Object.keys(variables).length} variables stored in configs.`);
 
             configure.handler((data) => {
                 data.templates.push({
                     id,
                     name,
-                    variables: compiler.getTemplateVariables(id)
+                    variables,
                 })
             });
+            console.log('apply config changes.')
 
-            logger.success('template successfully imported!');
+            logger.success(`template successfully imported!\nuse 'arsnippet render ${name} [YOUR_FOLDER_NAME]' to render template`);
         } catch (ex) {
             logger.error(ex);
         }
@@ -119,10 +127,10 @@ class Template {
 
             while (true) {
                 requiredVar = varOptions.hasOwnProperty('required') && varOptions.required;
-                answer = await prompt.ask(`${varName}${requiredVar ? chalk.blue.bold('*') : ''}: `);
+                answer = await prompt.ask(`${varName}${requiredVar ? chalk.red.bold('*') : ''}: `);
 
                 if (!answer && requiredVar === true) {
-                    console.log('\n' + chalk.yellow.italic('this variable is reqiurd! fill it please'));
+                    console.log(chalk.yellow.italic('this variable is reqiurd! fill it please'));
                     continue;
                 }
                 break;
@@ -142,20 +150,13 @@ class Template {
                 throw new Error('template not found. please check name template name or create one!');
             }
 
+            console.log('read template storage directory files')
             const files = fse.readdirSync(configure.getTemplateFolder(tempConfigs.id)).filter(file => path.extname(file) === '.txt');
             if (!files.length) {
                 throw new Error('there is no file to render in template folder.');
             }
 
             const tempVariablesWithValue = await this.getVariablesValueFromCli(tempConfigs.variables);
-
-            const progress = new cliProgress.SingleBar({
-                format: `compiling template files | ${colors.blueBright('{bar}')} - {percentage}%`,
-                barCompleteChar: '\u2588',
-                barIncompleteChar: '\u2591',
-            }, cliProgress.Presets.shades_grey)
-
-            progress.start(files.length, 0);
 
             const whereToRenderTemplate = path.resolve(process.cwd(), renderFolderName);
             if (!fse.existsSync(whereToRenderTemplate)) {
@@ -170,11 +171,9 @@ class Template {
                     compiler.renderTemplateFile(fileDir, tempVariablesWithValue)
                 )
 
-                progress.increment();
+                console.log(`${file} compiled and created`);
             }
-
-            progress.stop();
-            logger.success('template successfully created.');
+            logger.success(`template successfully created\nenjoy!`);
 
         } catch (ex) {
             logger.error(ex);

@@ -7,25 +7,23 @@ class Logger {
         if (typeof exception === 'string') {
             return console.log(chalk.redBright('Error: '), chalk.red(exception));
         }
-    
-        console.log('\n');
         console.log(chalk.redBright('Error: '), chalk.red.bold(exception.message))
     
         if (configure.isDevMode) {
-            console.log(boxen(chalk.gray(exception.stack), { title: 'Stack Error', padding: 1, margin: 1, borderColor: 'red' }));
+            console.log(boxen(chalk.gray(exception.stack), { title: 'Stack Error', borderColor: 'red' }));
         }
     }
 
     warning(message) {
-        console.log(boxen(chalk.yellow.bold(message), { padding: 1, margin: 1, borderColor: 'green' }))
+        console.log(boxen(chalk.yellow.bold(message), { borderColor: 'green' }))
     }
 
     success(message) {
-        console.log(boxen(chalk.green.bold(message), { padding: 1, margin: 1, borderColor: 'green' }))
+        console.log(boxen(chalk.green.bold(message), { borderColor: 'green' }))
     }
 
     header(message) {
-        console.log('\n' + chalk.bgGray.bold.italic(message))
+        console.log(chalk.bold(message))
     }
 }
 
