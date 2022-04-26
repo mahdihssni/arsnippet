@@ -1,6 +1,6 @@
 {
   "name": "arsnippet",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Exlusive for ArvanCloud projects",
   "main": "./bin/index.js",
   "scripts": {
