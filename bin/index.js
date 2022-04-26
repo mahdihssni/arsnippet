@@ -41,4 +41,9 @@ program
     .command('removeall')
     .action(template.removeAll);
 
+program
+    .command('update')
+    .argument('<template>', 'template name')
+    .action(template.updateTemplateFile);
+
 program.parse(process.argv);

@@ -1,16 +1,18 @@
 const chalk = require("chalk");
 const config = require('../bin/config.json');
-const cliProgress = require('cli-progress');
 const path = require("path");
 const fse = require('fs-extra');
 
-const colors = require('ansi-colors')
 const configure = require('./configure');
 const logger = require("./logger");
 const Prompt = require('./prompt');
 const compiler = require("./compiler");
 const autoBind = require("auto-bind");
-const { exec } = require("child_process");
+const inquirer = require('inquirer');
+const openInEditor = require('open-in-editor');
+
+const os = require('os');
+
 
 class Template {
     constructor() {
@@ -175,6 +177,34 @@ class Template {
             }
             logger.success(`template successfully created\nenjoy!`);
 
+        } catch (ex) {
+            logger.error(ex);
+        }
+    }
+
+    async updateTemplateFile(template) {
+        try {
+            const templateDetail = configure.findTemplateConfigByName(template);
+            if (!configure.isTemplateExists(template)) {
+                throw new Error('template is not exists!')
+            }
+
+            const listOfFileNames = fse.readdirSync(configure.getTemplateFolder(templateDetail.id));
+            const { update: selectedFile } = await inquirer.prompt({
+                type: 'list',
+                name: 'update',
+                message: 'Which file do you want to modify?',
+                choices: listOfFileNames,
+            });
+
+            const fileEditor = openInEditor.configure({ editor: 'code', pattern: '{filename}' }, logger.error)
+            await fileEditor.open(configure.getTemplateFile(templateDetail.id, selectedFile))
+
+            console.log('waiting for the file changes in editor...');
+            await fse.watchFile(configure.getTemplateFile(templateDetail.id, selectedFile), () => {
+                fse.unwatchFile(configure.getTemplateFile(templateDetail.id, selectedFile));
+                logger.success('changes applied!');
+            });
         } catch (ex) {
             logger.error(ex);
         }
