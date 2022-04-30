@@ -21,7 +21,7 @@ program
 
 program
     .command('import')
-    .argument('<string>', 'file path for import template')
+    .argument('<template-name>', 'file path for import template')
     .option('-n, --name <string>', 'template name')
     .action(template.import);
 
@@ -34,7 +34,7 @@ program
 
 program
     .command('remove')
-    .argument('<string>', 'template name or id')
+    .argument('<template-name>', 'template name or id')
     .action(template.remove);
 
 program
@@ -43,7 +43,7 @@ program
 
 program
     .command('update')
-    .argument('<template>', 'template name')
+    .argument('<template-name>', 'template name')
     .action(template.updateTemplateFile);
 
 program
