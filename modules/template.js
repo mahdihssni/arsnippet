@@ -12,6 +12,7 @@ const inquirer = require('inquirer');
 const openInEditor = require('open-in-editor');
 
 const os = require('os');
+const boxen = require("boxen");
 
 
 class Template {
@@ -189,7 +190,7 @@ class Template {
                 throw new Error('template is not exists!')
             }
 
-            const listOfFileNames = fse.readdirSync(configure.getTemplateFolder(templateDetail.id));
+            const listOfFileNames = configure.getTemplateFileNames(templateDetail.id);
             const { update: selectedFile } = await inquirer.prompt({
                 type: 'list',
                 name: 'update',
@@ -201,10 +202,37 @@ class Template {
             await fileEditor.open(configure.getTemplateFile(templateDetail.id, selectedFile))
 
             console.log('waiting for the file changes in editor...');
-            await fse.watchFile(configure.getTemplateFile(templateDetail.id, selectedFile), () => {
+            fse.watchFile(configure.getTemplateFile(templateDetail.id, selectedFile), () => {
                 fse.unwatchFile(configure.getTemplateFile(templateDetail.id, selectedFile));
                 logger.success('changes applied!');
             });
+        } catch (ex) {
+            logger.error(ex);
+        }
+    }
+
+    async detail(templateName) {
+        try {
+            if (!configure.isTemplateExists(templateName)) {
+                throw new Error('template is not exists');
+            }
+
+            const templateConfig = configure.findTemplateConfigByName(templateName);
+            const listOfFileNames = configure.getTemplateFileNames(templateConfig.id);
+
+            const { detail: selectedFile } = await inquirer.prompt({
+                type: 'list',
+                name: 'detail',
+                message: 'Which file do you want to see context?',
+                choices: listOfFileNames
+            })
+
+            console.log(boxen(fse.readFileSync(configure.getTemplateFile(templateConfig.id, selectedFile), 'utf-8'), {
+                padding: 1,
+                title: `Context of ${selectedFile} from ${templateName} template`,
+                borderColor: "magenta"
+            }));
+
         } catch (ex) {
             logger.error(ex);
         }

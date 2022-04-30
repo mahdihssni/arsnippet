@@ -46,4 +46,10 @@ program
     .argument('<template>', 'template name')
     .action(template.updateTemplateFile);
 
+program
+    .command('detail')
+    .description('see context of template')
+    .argument('<template-name>', 'template name')
+    .action(template.detail)
+
 program.parse(process.argv);

@@ -85,6 +85,10 @@ class Config {
         const valid = validate(require(configDir));
         console.log(valid)
     }
+
+    getTemplateFileNames(id) {
+        return fse.readdirSync(this.getTemplateFolder(id));
+    }
 }
 
 module.exports = new Config();
