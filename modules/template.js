@@ -9,9 +9,6 @@ const Prompt = require('./prompt');
 const compiler = require("./compiler");
 const autoBind = require("auto-bind");
 const inquirer = require('inquirer');
-const openInEditor = require('open-in-editor');
-
-const os = require('os');
 const boxen = require("boxen");
 
 
@@ -121,29 +118,24 @@ class Template {
     }
 
     async getVariablesValueFromCli(variables) {
-        logger.header('set value for variables:');
         const prompt = new Prompt();
         const data = {};
 
-        for (const [varName, varOptions] of Object.entries(variables)) {
-            let requiredVar, answer;
-
-            while (true) {
-                requiredVar = varOptions.hasOwnProperty('required') && varOptions.required;
-                answer = await prompt.ask(`${varName}${requiredVar ? chalk.red.bold('*') : ''}: `);
-
-                if (!answer && requiredVar === true) {
-                    console.log(chalk.yellow.italic('this variable is reqiurd! fill it please'));
-                    continue;
+        const promptQuestions = Object.entries(variables).map(([name, options]) => ({
+            type: 'input',
+            name,
+            message: `Value of '${name}' variable?${options.required ? chalk.gray(' (required)') : ''}`,
+            validate(input) {
+                const done = this.async();
+                if (options.required && !input) {
+                    done('This variable is required! please fill the value')
                 }
-                break;
+
+                done(null, true);
             }
-
-            data[varName] = answer;
-        }
-
-        prompt.close();
-        return data;
+        }));
+        const variablesAnswer = await inquirer.prompt(promptQuestions);
+        return variablesAnswer;
     }
 
     async render(templateName, renderFolderName) {
@@ -152,8 +144,6 @@ class Template {
             if (!tempConfigs) {
                 throw new Error('template not found. please check name template name or create one!');
             }
-
-            console.log('read template storage directory files')
             const files = fse.readdirSync(configure.getTemplateFolder(tempConfigs.id)).filter(file => !!path.extname(file));
             if (!files.length) {
                 throw new Error('there is no file to render in template folder.');
@@ -173,8 +163,6 @@ class Template {
                     path.resolve(whereToRenderTemplate, path.basename(file)),
                     compiler.renderTemplateFile(fileDir, tempVariablesWithValue)
                 )
-
-                console.log(`${file} compiled and created`);
             }
             logger.success(`template successfully created\nenjoy!`);
 
