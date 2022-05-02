@@ -89,6 +89,10 @@ class Config {
     getTemplateFileNames(id) {
         return fse.readdirSync(this.getTemplateFolder(id));
     }
+
+    getVersion() {
+        return require('../package.json').version;
+    }
 }
 
 module.exports = new Config();

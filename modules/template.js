@@ -227,6 +227,11 @@ class Template {
                 choices: listOfFileNames
             })
 
+            console.log(boxen(`id: ${templateConfig.id}\nname: ${templateConfig.name}\nvariables: ${Object.keys(templateConfig.variables).join(', ')}`, {
+                title: 'Template Information',
+                padding: 1,
+                borderColor: 'gray',
+            }))
             console.log(boxen(fse.readFileSync(configure.getTemplateFile(templateConfig.id, selectedFile), 'utf-8'), {
                 padding: 1,
                 title: `Context of ${selectedFile} from ${templateName} template`,
