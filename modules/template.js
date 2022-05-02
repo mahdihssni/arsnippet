@@ -191,21 +191,23 @@ class Template {
             }
 
             const listOfFileNames = configure.getTemplateFileNames(templateDetail.id);
-            const { update: selectedFile } = await inquirer.prompt({
+            const { update: selectedFile } = await inquirer.prompt([{
                 type: 'list',
                 name: 'update',
                 message: 'Which file do you want to modify?',
                 choices: listOfFileNames,
-            });
+            }]);
 
-            const fileEditor = openInEditor.configure({ editor: 'code', pattern: '{filename}' }, logger.error)
-            await fileEditor.open(configure.getTemplateFile(templateDetail.id, selectedFile))
+            const fileContext = fse.readFileSync(configure.getTemplateFile(templateDetail.id, selectedFile), 'utf-8');
 
-            console.log('waiting for the file changes in editor...');
-            fse.watchFile(configure.getTemplateFile(templateDetail.id, selectedFile), () => {
-                fse.unwatchFile(configure.getTemplateFile(templateDetail.id, selectedFile));
-                logger.success('changes applied!');
-            });
+            const { editor } = await inquirer.prompt({
+                type: "editor",
+                name: "editor",
+                message: 'Edit file content:',
+                default: fileContext,
+            })
+
+            fse.writeFileSync(configure.getTemplateFile(templateDetail.id, selectedFile), editor);
         } catch (ex) {
             logger.error(ex);
         }

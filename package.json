@@ -20,7 +20,6 @@
     "cli-progress": "^3.10.0",
     "commander": "^9.1.0",
     "fs-extra": "^10.1.0",
-    "inquirer": "^8.2.2",
-    "open-in-editor": "^2.2.0"
+    "inquirer": "^8.2.2"
   }
 }
