@@ -2,6 +2,7 @@ const chalk = require("chalk");
 const config = require('../bin/config.json');
 const path = require("path");
 const fse = require('fs-extra');
+const fs = require('fs');
 
 const configure = require('./configure');
 const logger = require("./logger");
@@ -10,7 +11,6 @@ const compiler = require("./compiler");
 const autoBind = require("auto-bind");
 const inquirer = require('inquirer');
 const boxen = require("boxen");
-
 
 class Template {
     constructor() {
@@ -32,8 +32,55 @@ class Template {
         console.log('\n\n');
     }
 
-    add() {
+    async add(filePath, template) {
+        try {
+            const templateConfig = configure.findTemplateConfigByName(template);
 
+            if (!configure.isTemplateExists(template)) {
+                throw new Error('template is not exists!');
+            }
+
+            if (!fse.existsSync(filePath)) {
+                throw new Error('file is not exists!')
+            }
+
+            const stats = fse.statSync(filePath);
+            if (stats.isDirectory()) {
+                throw new Error('target should be a file.');
+            }
+
+            const fileVariables = Object.fromEntries(
+                compiler.extractContextVariables(fse.readFileSync(filePath, 'utf-8'))
+                    .map((item) => [item, { required: false, type: 'String' }])
+            );
+
+            if (Object.keys(fileVariables).length && Object.keys(templateConfig.variables).length) {
+                const conflictVariables = Object.keys(templateConfig.variables).filter(item => fileVariables.hasOwnProperty(item));                
+                if (conflictVariables.length) {
+                    const { ignoreConflicts } = await inquirer.prompt({
+                        type: 'confirm',
+                        name: 'ignoreConflicts',
+                        message: `This file variables (${conflictVariables.join(', ')}) has conflict with template variables.\nDo you want to continue?`
+                    })
+
+                    if (!ignoreConflicts) {
+                        console.log('Add file to template canceled!');
+                        return;
+                    }
+                }
+            }
+
+            fse.copyFileSync(filePath, path.resolve(configure.getTemplateFolder(templateConfig.id), path.basename(file)));
+
+            configure.handler((data) => {
+                const index = data.templates.findIndex(template => template.id === templateConfig.id);
+                data.templates[index].variables = Object.assign(data.templates[index].variables, fileVariables);
+            });
+
+            logger.success(`file successfully added to ${template}`);
+        } catch (ex) {
+            logger.error(ex);
+        }
     }
 
     import(_path, options) {
@@ -118,9 +165,6 @@ class Template {
     }
 
     async getVariablesValueFromCli(variables) {
-        const prompt = new Prompt();
-        const data = {};
-
         const promptQuestions = Object.entries(variables).map(([name, options]) => ({
             type: 'input',
             name,
@@ -233,5 +277,8 @@ class Template {
         }
     }
 }
+
+var obj = new Object();
+obj.hasOwnProperty
 
 module.exports = new Template();

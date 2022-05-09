@@ -31,7 +31,10 @@ program
     .option('-n, --name <string>', 'template name')
     .action(template.import);
 
-program.command('add');
+program
+    .command('add')
+    .arguments('<file> <template-name>')
+    .action(template.add);
 
 program
     .command('config')
