@@ -16,14 +16,14 @@ class Compiler {
         const tempConfigFile = path.resolve(configure.getTemplateFolder(id), 'config.json');
         let variables = {};
 
-        const tempDirFiles = fse.readdirSync(configure.getTemplateFolder(id)).filter(file => path.extname(file) === '.txt');
+        const tempDirFiles = fse.readdirSync(configure.getTemplateFolder(id)).filter((file) => file !== 'config.json');
 
         for (const file of tempDirFiles) {
             const fileVars = this.extractContextVariables(
                 fse.readFileSync(path.resolve(configure.getTemplateFolder(id), file), 'utf-8')
             );
 
-            Object.assign(variables, fileVars.reduce((i, v) => ({[v]: { type: 'String', required: false }}), {}))
+            Object.assign(variables, fileVars.reduce((i, v) => ({ [v]: { type: 'String', required: false } }), {}))
         }
 
         if (fse.existsSync(tempConfigFile)) {

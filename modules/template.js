@@ -115,7 +115,8 @@ class Template {
             console.log('template files were saved.')
 
             const variables = compiler.getTemplateVariables(id);
-            console.log(`${Object.keys(variables).length} variables stored in configs.`);
+            const variablesLength = Object.keys(variables).length;
+            console.log(variablesLength ? `${variablesLength} variables stored in configs.` : "template hasn't any variable.");
 
             configure.handler((data) => {
                 data.templates.push({
@@ -124,7 +125,7 @@ class Template {
                     variables,
                 })
             });
-            console.log('apply config changes.')
+            console.log('template configs applied.')
 
             logger.success(`template successfully imported!\nuse 'arsnippet render ${name} [YOUR_FOLDER_NAME]' to render template`);
         } catch (ex) {
