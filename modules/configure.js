@@ -3,7 +3,6 @@ const chalk = require('chalk');
 const fse = require('fs-extra');
 const path = require('path');
 const configFile = require('./../bin/config.json');
-const AJV = require('ajv');
 const logger = require('./logger');
 
 class Config {
@@ -11,20 +10,24 @@ class Config {
         autoBind(this);
     }
 
+    get isDevMode() {
+        return configFile.isDev;
+    }
+
     action(options) {
         const methods = {
             isprod: (value) => {
                 value = value.toLowerCase() === 'true' || parseInt(value) > 0;
-                
+
                 this.handler((data) => {
-                    data.isDev = value; 
+                    data.isDev = value;
                     return data;
                 })
 
                 logger.warning('isdev mode changed ' + value);
             }
         }
-    
+
         Object.entries(options).forEach(([index, value]) => {
             if (methods.hasOwnProperty(index)) {
                 methods[index](value);
@@ -41,7 +44,7 @@ class Config {
             console.log(chalk.red.bold(ex.message))
         }
     }
-    
+
     uid() {
         return Date.now().toString().slice(0, 3) + parseInt(Math.random() * 0x10000).toString(32);
     }
@@ -70,13 +73,9 @@ class Config {
         return configFile.templates.findIndex(template => template.name === name) > -1;
     }
 
-    get isDevMode() {
-        return configFile.isDev;
-    }
-
     getVaribalesFromConfigFile(configDir) {
         const ajv = new AJV();
-        
+
         const schema = {
             type: "object"
         }
@@ -84,6 +83,14 @@ class Config {
         const validate = ajv.compile(schema);
         const valid = validate(require(configDir));
         console.log(valid)
+    }
+
+    getTemplateFileNames(id) {
+        return fse.readdirSync(this.getTemplateFolder(id));
+    }
+
+    getVersion() {
+        return require('../package.json').version;
     }
 }
 

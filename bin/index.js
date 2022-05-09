@@ -9,6 +9,12 @@ program
     .name('ars')
     .description('Create snippet for arvan projects')
     .usage('<command>')
+    .option('-v, --version')
+    .action((options) => {
+        if (options.version) {
+            console.log(configure.getVersion());
+        }
+    })
 
 program
     .command('render')
@@ -21,11 +27,14 @@ program
 
 program
     .command('import')
-    .argument('<string>', 'file path for import template')
+    .argument('<template-name>', 'file path for import template')
     .option('-n, --name <string>', 'template name')
     .action(template.import);
 
-program.command('add');
+program
+    .command('add')
+    .arguments('<file> <template-name>')
+    .action(template.add);
 
 program
     .command('config')
@@ -34,7 +43,7 @@ program
 
 program
     .command('remove')
-    .argument('<string>', 'template name or id')
+    .argument('<template-name>', 'template name or id')
     .action(template.remove);
 
 program
@@ -43,7 +52,14 @@ program
 
 program
     .command('update')
-    .argument('<template>', 'template name')
+    .argument('<template-name>', 'template name')
     .action(template.updateTemplateFile);
+
+program
+    .command('detail')
+    .description('see context of template')
+    .argument('<template-name>', 'template name')
+    .action(template.detail)
+
 
 program.parse(process.argv);

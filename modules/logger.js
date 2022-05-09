@@ -1,15 +1,20 @@
 const chalk = require('chalk');
 const boxen = require('boxen');
-const configure = require('./configure');
+const autoBind = require('auto-bind');
+const config = require('../bin/config.json');
 
 class Logger {
+    constructor() {
+        autoBind(this);
+    }
+
     error(exception) {
         if (typeof exception === 'string') {
             return console.log(chalk.redBright('Error: '), chalk.red(exception));
         }
         console.log(chalk.redBright('Error: '), chalk.red.bold(exception.message))
-    
-        if (configure.isDevMode) {
+            
+        if (config.isDev) {
             console.log(boxen(chalk.gray(exception.stack), { title: 'Stack Error', borderColor: 'red' }));
         }
     }
