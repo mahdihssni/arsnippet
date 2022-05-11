@@ -70,7 +70,7 @@ class Template {
                 }
             }
 
-            fse.copyFileSync(filePath, path.resolve(configure.getTemplateFolder(templateConfig.id), path.basename(file)));
+            fse.copyFileSync(filePath, path.resolve(configure.getTemplateFolder(templateConfig.id), path.basename(filePath)));
 
             configure.handler((data) => {
                 const index = data.templates.findIndex(template => template.id === templateConfig.id);
