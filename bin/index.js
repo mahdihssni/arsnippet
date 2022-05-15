@@ -9,12 +9,7 @@ program
     .name('ars')
     .description('Create snippet for arvan projects')
     .usage('<command>')
-    .option('-v, --version')
-    .action((options) => {
-        if (options.version) {
-            console.log(configure.getVersion());
-        }
-    })
+    .version(configure.getVersion());
 
 program
     .command('render')
@@ -60,6 +55,8 @@ program
     .description('see context of template')
     .argument('<template-name>', 'template name')
     .action(template.detail)
+
+
 
 
 program.parse(process.argv);
