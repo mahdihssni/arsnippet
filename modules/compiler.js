@@ -9,7 +9,8 @@ class Compiler {
     }
 
     extractContextVariables(context) {
-        return context.match(/(?<=\{\{).*?(?=\}\})/g) || [];
+        let variables = context.match(/(?<=\{\{).*?(?=\}\})/g) || [];
+        return variables.map(variable => variable.replace(/\s/g, ''));
     }
 
     getTemplateVariables(id) {
