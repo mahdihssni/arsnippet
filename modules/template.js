@@ -55,7 +55,7 @@ class Template {
             );
 
             if (Object.keys(fileVariables).length && Object.keys(templateConfig.variables).length) {
-                const conflictVariables = Object.keys(templateConfig.variables).filter(item => fileVariables.hasOwnProperty(item));                
+                const conflictVariables = Object.keys(templateConfig.variables).filter(item => fileVariables.hasOwnProperty(item));
                 if (conflictVariables.length) {
                     const { ignoreConflicts } = await inquirer.prompt({
                         type: 'confirm',
@@ -132,7 +132,7 @@ class Template {
             logger.error(ex);
         }
     }
-    
+
     async getVariablesValueFromCli(variables) {
         const promptQuestions = Object.entries(variables).map(([name, options]) => ({
             type: 'input',
@@ -149,39 +149,6 @@ class Template {
         }));
         const variablesAnswer = await inquirer.prompt(promptQuestions);
         return variablesAnswer;
-    }
-
-    async render(templateName, renderFolderName) {
-        try {
-            const tempConfigs = configure.findTemplateConfigByName(templateName);
-            if (!tempConfigs) {
-                throw new Error('template not found. please check name template name or create one!');
-            }
-            const files = fse.readdirSync(configure.getTemplateFolder(tempConfigs.id)).filter(file => !!path.extname(file));
-            if (!files.length) {
-                throw new Error('there is no file to render in template folder.');
-            }
-
-            const tempVariablesWithValue = await this.getVariablesValueFromCli(tempConfigs.variables);
-
-            const whereToRenderTemplate = path.resolve(process.cwd(), renderFolderName);
-            if (!fse.existsSync(whereToRenderTemplate)) {
-                fse.mkdirsSync(whereToRenderTemplate);
-            }
-
-            for (const file of files) {
-                const fileDir = configure.getTemplateFile(tempConfigs.id, file);
-
-                fse.writeFileSync(
-                    path.resolve(whereToRenderTemplate, path.basename(file)),
-                    compiler.renderTemplateFile(fileDir, tempVariablesWithValue)
-                )
-            }
-            logger.success(`template successfully created\nenjoy!`);
-
-        } catch (ex) {
-            logger.error(ex);
-        }
     }
 
     async updateTemplateFile(template) {
@@ -245,9 +212,20 @@ class Template {
             logger.error(ex);
         }
     }
-}
 
-var obj = new Object();
-obj.hasOwnProperty
+    getTargetTemplateFolder(...paths) {
+        try {
+            const dir = path.resolve(...paths);
+
+            if (!fse.existsSync(dir)) {
+                fse.mkdirsSync(dir);
+            }
+            
+            return dir;
+        } catch (ex) {
+            logger.error(ex)
+        }
+    }
+}
 
 module.exports = new Template();

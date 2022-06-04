@@ -1,6 +1,10 @@
 const configure = require("../modules/configure");
 const logger = require("../modules/logger");
 const Actions = require("./base");
+const templateModule = require('../modules/template');
+const fse = require('fs-extra');
+const path = require('path');
+const compiler = require("../modules/compiler");
 
 class RenderAction extends Actions {
     run(templateName, targetFolderName) {
@@ -12,19 +16,15 @@ class RenderAction extends Actions {
         }
     }
 
-    renderTemplateWithFolder(folderName) {
+    async renderTemplateWithFolder(folderName) {
         try {
             const files = fse.readdirSync(configure.getTemplateFolder(this.template.id)).filter(file => !!path.extname(file));
             if (!files.length) {
                 throw new Error('there is no file to render in template folder.');
             }
 
-            const tempVariablesWithValue = await this.getVariablesValueFromCli(this.template.variables);
-
-            const whereToRenderTemplate = path.resolve(process.cwd(), folderName);
-            if (!fse.existsSync(whereToRenderTemplate)) {
-                fse.mkdirsSync(whereToRenderTemplate);
-            }
+            const tempVariablesWithValue = await templateModule.getVariablesValueFromCli(this.template.variables);
+            const whereToRenderTemplate = templateModule.getTargetTemplateFolder(process.cwd(), folderName);
 
             for (const file of files) {
                 const fileDir = configure.getTemplateFile(this.template.id, file);
@@ -43,4 +43,4 @@ class RenderAction extends Actions {
 
 }
 
-module.export = new RenderAction();
+module.exports = new RenderAction();

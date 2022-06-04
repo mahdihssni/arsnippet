@@ -6,11 +6,10 @@ class Actions {
         autoBind(this);
     }
     setTemplateConfigures(template) {
-        if (!this.template) {
-            throw new Error('template not found to remove');
-        }
-        
         this.template = configure.findTemplateConfigByName(template);
+        if (!this.template) {
+            throw new Error('specific template not found. try again or create new one!');
+        }
     }
 }
 

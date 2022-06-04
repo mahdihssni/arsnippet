@@ -4,6 +4,7 @@ const template = require('../modules/template');
 const configure = require('../modules/configure');
 
 const removeAction = require('../actions/remove');
+const renderAction = require('../actions/render');
 
 const { Command } = require('commander');
 const program = new Command();
@@ -17,7 +18,7 @@ program
 program
     .command('render')
     .arguments('<templateName> <folderName>')
-    .action(template.render);
+    .action(renderAction.run);
 
 program
     .command('list')
