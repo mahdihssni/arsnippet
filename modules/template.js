@@ -133,28 +133,6 @@ class Template {
         }
     }
 
-    remove(name) {
-        try {
-            if (!configure.isTemplateExists(name)) {
-                throw new Error('template not found to remove');
-            }
-
-            const tempConfigs = configure.findTemplateConfigByName(name);
-            fse.removeSync(configure.getTemplateFolder(tempConfigs.id));
-
-            configure.handler((data) => {
-                data.templates.splice(
-                    data.templates.findIndex(temp => temp.id === tempConfigs.id),
-                    1
-                );
-            })
-
-            console.log(`'${name}' successfully removed from templates.`);
-        } catch (ex) {
-            logger.error(ex);
-        }
-    }
-
     removeAll() {
         if (!this.list.length) {
             return logger.error('no template to remove.');

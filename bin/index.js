@@ -2,6 +2,9 @@
 
 const template = require('../modules/template');
 const configure = require('../modules/configure');
+
+const removeAction = require('../actions/remove');
+
 const { Command } = require('commander');
 const program = new Command();
 
@@ -38,8 +41,10 @@ program
 
 program
     .command('remove')
-    .argument('<template-name>', 'template name or id')
-    .action(template.remove);
+    .argument('[template-name]', 'template name')
+    .option('-s, --single-file', 'remove single file from template')
+    .option('-a, --all', 'remove all exists templates')
+    .action(removeAction.run);
 
 program
     .command('removeall')
