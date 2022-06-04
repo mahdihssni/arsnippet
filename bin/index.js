@@ -25,8 +25,8 @@ program
 
 program
     .command('import')
-    .argument('<template-name>', 'file path for import template')
-    .option('-n, --name <string>', 'template name')
+    .argument('<template-name>', 'folder path for import template')
+    .option('-n, --name <custom-template-name>', 'custom template name')
     .action(template.import);
 
 program
@@ -45,10 +45,6 @@ program
     .option('-s, --single-file', 'remove single file from template')
     .option('-a, --all', 'remove all exists templates')
     .action(removeAction.run);
-
-program
-    .command('removeall')
-    .action(template.removeAll);
 
 program
     .command('update')

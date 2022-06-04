@@ -8,18 +8,15 @@ const fse = require('fs-extra');
 class RemoveAction extends Actions {
     run(templateName, options) {
         try {
-            this.template = config.findTemplateConfigByName(templateName);
             if (options.all) {
                 return this.removeAllTemplates();
             }
 
-            if (!this.template) {
-                throw new Error('template not found to remove');
-            }
+            this.setTemplateConfigures(templateName);
 
-                if (options.singleFile) {
-                    return this.removeFileFromTemplate();
-                }
+            if (options.singleFile) {
+                return this.removeFileFromTemplate();
+            }
 
             return this.removeTemplate();
         } catch (ex) {
@@ -50,7 +47,7 @@ class RemoveAction extends Actions {
             if (!templates.length) {
                 throw new Error('no template to remove');
             }
-            
+
             templates.forEach(template => {
                 this.template = template;
                 this.removeTemplate();
@@ -62,7 +59,7 @@ class RemoveAction extends Actions {
             return logger.error('no template to remove.');
         }
 
-        
+
     }
 }
 

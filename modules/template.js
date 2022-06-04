@@ -132,17 +132,7 @@ class Template {
             logger.error(ex);
         }
     }
-
-    removeAll() {
-        if (!this.list.length) {
-            return logger.error('no template to remove.');
-        }
-
-        this.list.forEach(template => {
-            this.remove(template.name);
-        })
-    }
-
+    
     async getVariablesValueFromCli(variables) {
         const promptQuestions = Object.entries(variables).map(([name, options]) => ({
             type: 'input',
