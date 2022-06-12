@@ -3,6 +3,7 @@
 const template = require('../modules/template');
 const configure = require('../modules/configure');
 
+const importAction = require('../actions/import');
 const removeAction = require('../actions/remove');
 const renderAction = require('../actions/render');
 
@@ -26,14 +27,10 @@ program
 
 program
     .command('import')
-    .argument('<template-name>', 'folder path for import template')
+    .argument('<template-directory>', 'folder or file path for import template')
     .option('-n, --name <custom-template-name>', 'custom template name')
-    .action(template.import);
-
-program
-    .command('add')
-    .arguments('<file> <template-name>')
-    .action(template.add);
+    .option('-a, --add <target-template-name>', 'target template name for add file or folder')
+    .action(importAction.run);
 
 program
     .command('config')

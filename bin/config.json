@@ -1,8 +1,8 @@
 {
     "templates": [
         {
-            "id": "1651d00",
-            "name": "vue",
+            "id": "16513jf",
+            "name": "vue-template",
             "variables": {
                 "baseClassName": {
                     "type": "String",
@@ -11,6 +11,10 @@
                 "componentName": {
                     "type": "String",
                     "required": false
+                },
+                "sample": {
+                    "required": false,
+                    "type": "String"
                 }
             }
         }
