@@ -55,7 +55,7 @@ class Template {
             );
 
             if (Object.keys(fileVariables).length && Object.keys(templateConfig.variables).length) {
-                const conflictVariables = Object.keys(templateConfig.variables).filter(item => fileVariables.hasOwnProperty(item));                
+                const conflictVariables = Object.keys(templateConfig.variables).filter(item => fileVariables.hasOwnProperty(item));
                 if (conflictVariables.length) {
                     const { ignoreConflicts } = await inquirer.prompt({
                         type: 'confirm',
@@ -70,7 +70,7 @@ class Template {
                 }
             }
 
-            fse.copyFileSync(filePath, path.resolve(configure.getTemplateFolder(templateConfig.id), path.basename(filePath)));
+            fse.copyFileSync(filePath, path.resolve(configure.getTemplateFolder(templateConfig.id), path.basename(file)));
 
             configure.handler((data) => {
                 const index = data.templates.findIndex(template => template.id === templateConfig.id);

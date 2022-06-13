@@ -2,6 +2,11 @@
 
 const template = require('../modules/template');
 const configure = require('../modules/configure');
+
+const importAction = require('../actions/import');
+const removeAction = require('../actions/remove');
+const renderAction = require('../actions/render');
+
 const { Command } = require('commander');
 const program = new Command();
 
@@ -9,17 +14,12 @@ program
     .name('ars')
     .description('Create snippet for arvan projects')
     .usage('<command>')
-    .option('-v, --version')
-    .action((options) => {
-        if (options.version) {
-            console.log(configure.getVersion());
-        }
-    })
+    .version(configure.getVersion());
 
 program
     .command('render')
     .arguments('<templateName> <folderName>')
-    .action(template.render);
+    .action(renderAction.run);
 
 program
     .command('list')
@@ -27,14 +27,10 @@ program
 
 program
     .command('import')
-    .argument('<template-name>', 'file path for import template')
-    .option('-n, --name <string>', 'template name')
-    .action(template.import);
-
-program
-    .command('add')
-    .arguments('<file> <template-name>')
-    .action(template.add);
+    .argument('<template-directory>', 'folder or file path for import template')
+    .option('-n, --name <custom-template-name>', 'custom template name')
+    .option('-a, --add <target-template-name>', 'target template name for add file or folder')
+    .action(importAction.run);
 
 program
     .command('config')
@@ -43,12 +39,10 @@ program
 
 program
     .command('remove')
-    .argument('<template-name>', 'template name or id')
-    .action(template.remove);
-
-program
-    .command('removeall')
-    .action(template.removeAll);
+    .argument('[template-name]', 'template name')
+    .option('-s, --single-file', 'remove single file from template')
+    .option('-a, --all', 'remove all exists templates')
+    .action(removeAction.run);
 
 program
     .command('update')
@@ -60,6 +54,8 @@ program
     .description('see context of template')
     .argument('<template-name>', 'template name')
     .action(template.detail)
+
+
 
 
 program.parse(process.argv);
