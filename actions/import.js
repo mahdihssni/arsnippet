@@ -9,6 +9,8 @@ const inquirer = require('inquirer');
 class ImportAction extends Actions {
     run(templatePath, options) {
         try {
+			const stats = fse.statSync(templatePath);
+
             if (!fse.existsSync(templatePath)) {
                 throw new Error('folder is not exists!');
             }
@@ -36,7 +38,7 @@ class ImportAction extends Actions {
 
     async importTemplateFolder(templateName) {
         try {
-            const name = templateName || path.basename(this.templatePath.path); 
+            const name = templateName || path.basename(this.templatePath.path);
 
             if (configure.isTemplateExists(name)) {
                 throw new Error('template with this name has exists!');

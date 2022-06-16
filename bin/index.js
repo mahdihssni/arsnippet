@@ -6,6 +6,7 @@ const configure = require('../modules/configure');
 const importAction = require('../actions/import');
 const removeAction = require('../actions/remove');
 const renderAction = require('../actions/render');
+const listAction = require('../actions/list');
 
 const { Command } = require('commander');
 const program = new Command();
@@ -23,7 +24,7 @@ program
 
 program
     .command('list')
-    .action(template.listAction);
+    .action(listAction.run);
 
 program
     .command('import')
