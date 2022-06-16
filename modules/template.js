@@ -78,35 +78,7 @@ class Template {
     }
 
     async detail(templateName) {
-        try {
-            if (!configure.isTemplateExists(templateName)) {
-                throw new Error('template is not exists');
-            }
 
-            const templateConfig = configure.findTemplateConfigByName(templateName);
-            const listOfFileNames = configure.getTemplateFileNames(templateConfig.id);
-
-            const { detail: selectedFile } = await inquirer.prompt({
-                type: 'list',
-                name: 'detail',
-                message: 'Which file do you want to see context?',
-                choices: listOfFileNames
-            })
-
-            console.log(boxen(`id: ${templateConfig.id}\nname: ${templateConfig.name}\nvariables: ${Object.keys(templateConfig.variables).join(', ')}`, {
-                title: 'Template Information',
-                padding: 1,
-                borderColor: 'gray',
-            }))
-            console.log(boxen(fse.readFileSync(configure.getTemplateFile(templateConfig.id, selectedFile), 'utf-8'), {
-                padding: 1,
-                title: `Context of ${selectedFile} from ${templateName} template`,
-                borderColor: "magenta"
-            }));
-
-        } catch (ex) {
-            logger.error(ex);
-        }
     }
 }
 

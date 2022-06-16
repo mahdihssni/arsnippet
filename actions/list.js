@@ -1,6 +1,4 @@
 const Actions = require('./base');
-const config = require("../bin/config.json");
-const chalk = require("chalk");
 const templateModule = require('../modules/template');
 
 class ListAction extends Actions {

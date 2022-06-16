@@ -7,6 +7,7 @@ const importAction = require('../actions/import');
 const removeAction = require('../actions/remove');
 const renderAction = require('../actions/render');
 const listAction = require('../actions/list');
+const detailAction = require('../actions/detail');
 
 const { Command } = require('commander');
 const program = new Command();
@@ -54,7 +55,8 @@ program
     .command('detail')
     .description('see context of template')
     .argument('<template-name>', 'template name')
-    .action(template.detail)
+	.option('-g, --general', 'template general details')
+    .action(detailAction.run)
 
 
 
