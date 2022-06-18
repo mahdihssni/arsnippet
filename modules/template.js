@@ -46,40 +46,6 @@ class Template {
 
 		return target;
 	}
-
-    async updateTemplateFile(template) {
-        try {
-            const templateDetail = configure.findTemplateConfigByName(template);
-            if (!configure.isTemplateExists(template)) {
-                throw new Error('template is not exists!')
-            }
-
-            const listOfFileNames = configure.getTemplateFileNames(templateDetail.id);
-            const { update: selectedFile } = await inquirer.prompt([{
-                type: 'list',
-                name: 'update',
-                message: 'Which file do you want to modify?',
-                choices: listOfFileNames,
-            }]);
-
-            const fileContext = fse.readFileSync(configure.getTemplateFile(templateDetail.id, selectedFile), 'utf-8');
-
-            const { editor } = await inquirer.prompt({
-                type: "editor",
-                name: "editor",
-                message: 'Edit file content:',
-                default: fileContext,
-            })
-
-            fse.writeFileSync(configure.getTemplateFile(templateDetail.id, selectedFile), editor);
-        } catch (ex) {
-            logger.error(ex);
-        }
-    }
-
-    async detail(templateName) {
-
-    }
 }
 
 module.exports = new Template();
