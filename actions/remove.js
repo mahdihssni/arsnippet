@@ -1,4 +1,3 @@
-const autoBind = require('auto-bind');
 const config = require('../modules/configure');
 const logger = require('../modules/logger');
 const Actions = require('./base');

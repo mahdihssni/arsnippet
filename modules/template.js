@@ -6,7 +6,6 @@ const fs = require('fs');
 
 const configure = require('./configure');
 const logger = require("./logger");
-const Prompt = require('./prompt');
 const compiler = require("./compiler");
 const autoBind = require("auto-bind");
 const inquirer = require('inquirer');
