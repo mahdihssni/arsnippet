@@ -88,7 +88,6 @@ class ImportAction extends Actions {
 
             success(`file successfully added to ${this.template.name}`);
         } catch (ex) {
-            console.log('salam')
             error(ex);
         }
     }
