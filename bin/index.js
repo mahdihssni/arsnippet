@@ -7,6 +7,7 @@ const importAction = require('../actions/import');
 const removeAction = require('../actions/remove');
 const renderAction = require('../actions/render');
 const listAction = require('../actions/list');
+const updateAction = require('../actions/update');
 const detailAction = require('../actions/detail');
 
 const { Command } = require('commander');
@@ -49,13 +50,13 @@ program
 program
     .command('update')
     .argument('<template-name>', 'template name')
-    .action(template.updateTemplateFile);
+    .action(updateAction.run);
 
 program
     .command('detail')
     .description('see context of template')
     .argument('<template-name>', 'template name')
-	.option('-g, --general', 'template general details')
+    .option('-g, --general', 'template general details')
     .action(detailAction.run)
 
 
